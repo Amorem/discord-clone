@@ -17,10 +17,14 @@ import { RegisterSchema } from "validation/auth.schema";
 
 export default function Register() {
   const history = useHistory();
+  const setUser = userStore((state) => state.setUser);
   async function handleSubmit(values, { setErrors }) {
     try {
       const { data } = await register(values);
-      history.push("/channels/me");
+      if (data) {
+        setUser(data);
+        history.push("/channels/me");
+      }
     } catch (err) {
       setErrors(toErrorMap(err));
     }
