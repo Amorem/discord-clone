@@ -1,6 +1,6 @@
 import { api } from "../apiClient";
 
-export const getAccount = () => null;
+export const getAccount = () => api.get("/account");
 
 export const updateAccount = () => null;
 
