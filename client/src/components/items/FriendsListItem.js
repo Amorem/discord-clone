@@ -17,8 +17,16 @@ import RemoveFriendModal from "components/modals/RemoveFriendModal";
 
 export default function FriendsListItem({ friend }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const cache = useQueryClient();
+  const history = useHistory();
 
-  async function getDMChannel() {}
+  async function getDMChannel() {
+    const { data } = await getOrCreateDirectMessage(friend.id);
+    if (data) {
+      cache.invalidateQueries(dmKey);
+      history.push(`/channels/me/${data.id}`);
+    }
+  }
 
   return (
     <ListItem
