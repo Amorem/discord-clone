@@ -16,7 +16,18 @@ import useGetFriend from "hooks/useGetFriend";
 import { fKey } from "utils/querykeys";
 
 export default function RemoveFriendModal({ id, isOpen, onClose }) {
-  async function handleRemoveFriend() {}
+  const user = useGetFriend(id);
+  const cache = useQueryClient();
+
+  async function handleRemoveFriend(id) {
+    onClose();
+    const { data } = await removeFriend(id);
+    if (data) {
+      cache.setQueryData(fKey, (friends) => {
+        return friends?.filter((friend) => friend.id !== id);
+      });
+    }
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -29,7 +40,7 @@ export default function RemoveFriendModal({ id, isOpen, onClose }) {
           mb={0}
           pb={0}
         >
-          Remove 'user.username'
+          Remove {user?.username}
         </ModalHeader>
         <ModalBody>
           <Text mb={"4"}>
