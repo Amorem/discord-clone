@@ -8,13 +8,16 @@ import homeStore from "stores/homeStore";
 import { rKey } from "utils/querykeys";
 
 export default function PendingList() {
+  const { data } = useQuery(rKey, () =>
+    getPendingRequests().then((res) => res.data)
+  );
   const reset = homeStore((state) => state.resetRequest);
 
   useEffect(() => {
     reset();
   });
 
-  if ("no pending requests") {
+  if (data?.lenghth === 0) {
     return (
       <Flex justify={"center"} align={"center"} w={"full"}>
         <Text textColor={"brandGray.accent"}>
@@ -27,8 +30,10 @@ export default function PendingList() {
   return (
     <>
       <UnorderedList listStyleType="none" ml="0" w="full" mt="2">
-        <OnlineLabel label={`Pending — ${0}`} />
-        pending friend requests
+        <OnlineLabel label={`Pending — ${data?.length || 0}`} />
+        {data?.map((request) => (
+          <RequestListItem key={request.id} request={request} />
+        ))}
       </UnorderedList>
     </>
   );
